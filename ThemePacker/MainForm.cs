@@ -19,6 +19,8 @@ namespace TheFullFacebook
         private string _path;
         private int _currentPic;
 
+        private ImageList _imageList;
+
         public TheFacebook()
         {
             InitializeComponent();
@@ -33,6 +35,11 @@ namespace TheFullFacebook
             _currentPic = 0;
             _likeds = new List<string>();
             _pictures = new Dictionary<string, Image>();
+            _imageList = new ImageList();
+            _imageList.ImageSize = new Size(128, 128);
+            _imageList.ColorDepth = ColorDepth.Depth32Bit;
+            picturesLsv.LargeImageList = _imageList;
+            picturesLsv.View = View.LargeIcon;
         }
 
         private void ChooseImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,7 +52,6 @@ namespace TheFullFacebook
                 _path = choosePicFolder.SelectedPath;
                 if (SelectPic())
                 {
-                    btnGenerate.Enabled = true;
                     btnLike.Enabled = true;
                     btnNext.Enabled = true;
                     btnPrevious.Enabled = true;
@@ -111,10 +117,19 @@ namespace TheFullFacebook
 
         private void BtnLike_Click(object sender, EventArgs e)
         {
-            string currentPath = _pictures.ElementAt(_currentPic).Key;
-            if (!_likeds.Contains(currentPath))
+            btnGenerate.Enabled = true;
+
+            var currentImg = _pictures.ElementAt(_currentPic);
+            if (!_likeds.Contains(currentImg.Key))
             {
-                _likeds.Add(currentPath);
+                _likeds.Add(currentImg.Key);
+
+                _imageList.Images.Add(currentImg.Key, currentImg.Value);
+
+                ListViewItem img = picturesLsv.Items.Add("");
+                img.ImageKey = currentImg.Key;
+                img.Tag = _currentPic.ToString();
+
                 BtnNext_Click(null, null);
             }
             else
@@ -125,10 +140,21 @@ namespace TheFullFacebook
 
         private void BtnGenerate_Click(object sender, EventArgs e)
         {
+            Hide();
+            /*OptionDialogBox opb = new OptionDialogBox();
+            opb.Show();*/
+
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Themepack | *.themepack";
             saveFileDialog.Title = "Enregistrer";
             saveFileDialog.ShowDialog();
+
+            if(saveFileDialog.FileName == null || saveFileDialog.FileName == string.Empty)
+            {
+                Show();
+                return;
+            }
+
             string fileName = new FileInfo(saveFileDialog.FileName).Name;
             fileName = fileName.Replace(".themepack", "");
 
@@ -167,6 +193,29 @@ namespace TheFullFacebook
             }
             DirectoryInfo di = Directory.CreateDirectory(path);
             DirectoryInfo dii = Directory.CreateDirectory(path + "\\DesktopBackground");
+        }
+
+        private void PicturesLsv_Click(object sender, EventArgs e)
+        {
+            if(picturesLsv.SelectedItems.Count > 0)
+            {
+                pbWallpaper.Image = _pictures[picturesLsv.SelectedItems[0].ImageKey];
+            }
+        }
+
+        private void BtnUnlike_Click(object sender, EventArgs e)
+        {
+            if (picturesLsv.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem item in picturesLsv.SelectedItems)
+                {
+                    _likeds.Remove(item.ImageKey);
+                    _imageList.Images.RemoveByKey(item.ImageKey);
+                    picturesLsv.Items.Remove(item);
+                }
+
+                UpdatePic();
+            }
         }
     }
 }

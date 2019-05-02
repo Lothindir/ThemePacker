@@ -38,6 +38,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chooseImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.picturesLsv = new System.Windows.Forms.ListView();
+            this.btnUnlike = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -105,7 +107,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(534, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1117, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -124,11 +126,32 @@
             this.chooseImageFolderToolStripMenuItem.Text = "Choose image folder";
             this.chooseImageFolderToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFolderToolStripMenuItem_Click);
             // 
+            // picturesLsv
+            // 
+            this.picturesLsv.Location = new System.Drawing.Point(497, 27);
+            this.picturesLsv.Name = "picturesLsv";
+            this.picturesLsv.Size = new System.Drawing.Size(608, 497);
+            this.picturesLsv.TabIndex = 19;
+            this.picturesLsv.UseCompatibleStateImageBehavior = false;
+            this.picturesLsv.Click += new System.EventHandler(this.PicturesLsv_Click);
+            // 
+            // btnUnlike
+            // 
+            this.btnUnlike.Location = new System.Drawing.Point(680, 530);
+            this.btnUnlike.Name = "btnUnlike";
+            this.btnUnlike.Size = new System.Drawing.Size(135, 42);
+            this.btnUnlike.TabIndex = 20;
+            this.btnUnlike.Text = "I dislike dis";
+            this.btnUnlike.UseVisualStyleBackColor = true;
+            this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
+            // 
             // TheFacebook
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 576);
+            this.ClientSize = new System.Drawing.Size(1117, 576);
+            this.Controls.Add(this.btnUnlike);
+            this.Controls.Add(this.picturesLsv);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.pbProgression);
             this.Controls.Add(this.btnGenerate);
@@ -160,6 +183,8 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem chooseImageFolderToolStripMenuItem;
+        private System.Windows.Forms.ListView picturesLsv;
+        private System.Windows.Forms.Button btnUnlike;
     }
 }
 
