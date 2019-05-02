@@ -16,7 +16,7 @@ namespace ThemePacker
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TheFacebook());
+            Application.Run(new ThemePacker());
         }
     }
 }

@@ -5,25 +5,28 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Windows.Forms;
 
 namespace ThemePacker
 {
-    public partial class TheFacebook : Form
+    public partial class ThemePacker : Form
     {
         private List<string> _likeds;
         private Dictionary<string, Image> _pictures;
         private string _path;
         private int _currentPic;
+        private bool _isFolderBased;
 
         private ImageList _imageList;
 
-        public TheFacebook()
+        public ThemePacker()
         {
             InitializeComponent();
         }
 
-        private void TheFacebook_Load(object sender, EventArgs e)
+        private void ThemePacker_Load(object sender, EventArgs e)
         {
             btnGenerate.Enabled = false;
             btnLike.Enabled = false;
@@ -47,15 +50,27 @@ namespace ThemePacker
             if (result == DialogResult.OK)
             {
                 _path = choosePicFolder.SelectedPath;
+                _pictures.Clear();
+                _currentPic = 0;
                 if (SelectPic())
                 {
                     btnLike.Enabled = true;
                     btnNext.Enabled = true;
                     btnPrevious.Enabled = true;
                     ListShuffle();
+                    _isFolderBased = true;
                     UpdatePic();
                 }
             }
+        }
+
+        private void GenerateFormInspirobotToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _isFolderBased = false;
+            btnNext.Click -= BtnNext_Click;
+            btnNext.Click += BtnNext_Click_API;
+            btnNext.Enabled = true;
+            btnGenerate.Enabled = true;
         }
 
         private void ListShuffle()
@@ -215,6 +230,22 @@ namespace ThemePacker
                 }
 
                 UpdatePic();
+            }
+        }
+
+        private async void BtnNext_Click_API(object sender, EventArgs e)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://inspirobot.me/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/uri-list"));
+
+                HttpResponseMessage response = await client.GetAsync("api?generate=true");
+                if(response.IsSuccessStatusCode)
+                {
+                    Uri returnUrl = response.Headers.Location;
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace ThemePacker
 {
-    partial class TheFacebook
+    partial class ThemePacker
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TheFacebook));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThemePacker));
             this.btnNext = new System.Windows.Forms.Button();
             this.pbProgression = new System.Windows.Forms.ProgressBar();
             this.btnGenerate = new System.Windows.Forms.Button();
@@ -40,6 +40,7 @@
             this.chooseImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picturesLsv = new System.Windows.Forms.ListView();
             this.btnUnlike = new System.Windows.Forms.Button();
+            this.generateFormInspirobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -114,7 +115,8 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chooseImageFolderToolStripMenuItem});
+            this.chooseImageFolderToolStripMenuItem,
+            this.generateFormInspirobotToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -145,7 +147,14 @@
             this.btnUnlike.UseVisualStyleBackColor = true;
             this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
             // 
-            // TheFacebook
+            // generateFormInspirobotToolStripMenuItem
+            // 
+            this.generateFormInspirobotToolStripMenuItem.Name = "generateFormInspirobotToolStripMenuItem";
+            this.generateFormInspirobotToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.generateFormInspirobotToolStripMenuItem.Text = "Generate from inspirobot.me";
+            this.generateFormInspirobotToolStripMenuItem.Click += new System.EventHandler(this.GenerateFormInspirobotToolStripMenuItem_Click);
+            // 
+            // ThemePacker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -160,10 +169,10 @@
             this.Controls.Add(this.pbWallpaper);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "TheFacebook";
+            this.Name = "ThemePacker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TheFacebook";
-            this.Load += new System.EventHandler(this.TheFacebook_Load);
+            this.Text = "ThemePacker";
+            this.Load += new System.EventHandler(this.ThemePacker_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -185,6 +194,7 @@
         private System.Windows.Forms.ToolStripMenuItem chooseImageFolderToolStripMenuItem;
         private System.Windows.Forms.ListView picturesLsv;
         private System.Windows.Forms.Button btnUnlike;
+        private System.Windows.Forms.ToolStripMenuItem generateFormInspirobotToolStripMenuItem;
     }
 }
 
