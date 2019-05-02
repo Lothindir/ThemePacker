@@ -1,4 +1,4 @@
-﻿namespace TheFullFacebook
+﻿namespace ThemePacker
 {
     partial class OptionDialogBox
     {

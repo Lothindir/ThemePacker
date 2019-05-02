@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TheFullFacebook.Properties
+namespace ThemePacker.Properties
 {
 
 

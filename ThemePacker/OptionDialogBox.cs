@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TheFullFacebook
+namespace ThemePacker
 {
     public partial class OptionDialogBox : Form
     {
