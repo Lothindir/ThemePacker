@@ -1,13 +1,10 @@
 ﻿using Microsoft.Deployment.Compression.Cab;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ThemePacker
@@ -78,7 +75,10 @@ namespace ThemePacker
             }
             foreach (string s in imagesList)
             {
-                _pictures.Add(s,Image.FromFile(s));
+                if (!_pictures.ContainsKey(s))
+                {
+                    _pictures.Add(s, Image.FromFile(s));
+                }
             }
             return true;
         }
