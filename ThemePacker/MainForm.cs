@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ThemePacker
@@ -18,6 +21,8 @@ namespace ThemePacker
         private string _path;
         private int _currentPic;
         private bool _isFolderBased;
+
+        private EventHandler _btnNextClick;
 
         private ImageList _imageList;
 
@@ -40,6 +45,18 @@ namespace ThemePacker
             _imageList.ColorDepth = ColorDepth.Depth32Bit;
             picturesLsv.LargeImageList = _imageList;
             picturesLsv.View = View.LargeIcon;
+
+            CreateDirectory("temp");//crée un dossier temporaire
+        }
+
+        private void ClearPictures()
+        {
+            foreach (Image image in _pictures.Values)
+            {
+                image.Dispose();
+            }
+            _pictures.Clear();
+            _currentPic = 0;
         }
 
         private void ChooseImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -47,11 +64,16 @@ namespace ThemePacker
             FolderBrowserDialog choosePicFolder = new FolderBrowserDialog();
             choosePicFolder.ShowNewFolderButton = false;
             DialogResult result = choosePicFolder.ShowDialog();
+
+            _btnNextClick = BtnNext_Click;
+            btnNext.Click += _btnNextClick;
+
             if (result == DialogResult.OK)
             {
                 _path = choosePicFolder.SelectedPath;
-                _pictures.Clear();
-                _currentPic = 0;
+
+                ClearPictures();
+
                 if (SelectPic())
                 {
                     btnLike.Enabled = true;
@@ -64,13 +86,25 @@ namespace ThemePacker
             }
         }
 
-        private void GenerateFormInspirobotToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void GenerateFormInspirobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ClearPictures();
+            pbWallpaper.Image = Image.FromFile("Resources\\loadingIcon.png");
+
+            await GetImageFromInspirobot();
+
+            _currentPic = 0;
+
             _isFolderBased = false;
-            btnNext.Click -= BtnNext_Click;
-            btnNext.Click += BtnNext_Click_API;
+
+            _btnNextClick = BtnNext_Click_API;
+            btnNext.Click += _btnNextClick;
+
             btnNext.Enabled = true;
-            btnGenerate.Enabled = true;
+            btnPrevious.Enabled = true;
+            btnLike.Enabled = true;
+
+            UpdatePic();
         }
 
         private void ListShuffle()
@@ -114,7 +148,7 @@ namespace ThemePacker
         private void UpdatePic()
         {
             pbWallpaper.Image = _pictures.ElementAt(_currentPic).Value;
-            pbProgression.Value = (_currentPic * 100) / (_pictures.Count - 1);
+            pbProgression.Value = (int) Math.Ceiling((_currentPic * 100) / (decimal)(_pictures.Count));
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
@@ -145,7 +179,7 @@ namespace ThemePacker
                 img.ImageKey = currentImg.Key;
                 img.Tag = _currentPic.ToString();
 
-                BtnNext_Click(null, null);
+                _btnNextClick(null, null);
             }
             else
             {
@@ -173,7 +207,6 @@ namespace ThemePacker
             string fileName = new FileInfo(saveFileDialog.FileName).Name;
             fileName = fileName.Replace(".themepack", "");
 
-            CreateDirectory("temp");//crée un dossier temporaire
             CopyQuick();
 
 
@@ -184,7 +217,7 @@ namespace ThemePacker
 
             CabInfo cab = new CabInfo(saveFileDialog.FileName);
             cab.Pack("temp", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
-            Directory.Delete("temp", true);
+            
             Environment.Exit(7);
 
         }
@@ -235,6 +268,30 @@ namespace ThemePacker
 
         private async void BtnNext_Click_API(object sender, EventArgs e)
         {
+            if (_currentPic != _pictures.Count - 1)
+            {
+                _currentPic++;
+            }
+            else
+            {
+                btnNext.Enabled = false;
+                btnPrevious.Enabled = false;
+                btnLike.Enabled = false;
+                btnUnlike.Enabled = false;
+
+                await GetImageFromInspirobot();
+
+                btnNext.Enabled = true;
+                btnPrevious.Enabled = true;
+                btnLike.Enabled = true;
+                btnUnlike.Enabled = true;
+            }
+
+            UpdatePic();
+        }
+
+        private async Task GetImageFromInspirobot()
+        {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://inspirobot.me/");
@@ -242,11 +299,39 @@ namespace ThemePacker
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/uri-list"));
 
                 HttpResponseMessage response = await client.GetAsync("api?generate=true");
-                if(response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
-                    Uri returnUrl = response.Headers.Location;
+                    string url = await response.Content.ReadAsStringAsync();
+
+                    using (WebClient webClient = new WebClient())
+                    {
+                        string[] urlBits = url.Split("/".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string fileName = urlBits[urlBits.Length - 1];
+                        string imagePath = $"temp\\{fileName}";
+
+                        Debug.WriteLine($"Starting {fileName} download");
+                        webClient.DownloadFile(new Uri(url), imagePath);
+                        Debug.WriteLine($"{fileName} download finished");
+
+                        _pictures.Add(imagePath, Image.FromFile(imagePath));
+                    }
+                    _currentPic++;
                 }
             }
+        }
+
+        private void ThemePacker_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ClearPictures();
+            if(Directory.Exists("temp"))
+            {
+                Directory.Delete("temp", true);
+            }
+        }
+
+        ~ThemePacker()
+        {
+            ClearPictures();
         }
     }
 }

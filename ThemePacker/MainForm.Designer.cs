@@ -38,9 +38,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chooseImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateFormInspirobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picturesLsv = new System.Windows.Forms.ListView();
             this.btnUnlike = new System.Windows.Forms.Button();
-            this.generateFormInspirobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,7 +53,6 @@
             this.btnNext.TabIndex = 17;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.BtnNext_Click);
             // 
             // pbProgression
             // 
@@ -124,9 +123,16 @@
             // chooseImageFolderToolStripMenuItem
             // 
             this.chooseImageFolderToolStripMenuItem.Name = "chooseImageFolderToolStripMenuItem";
-            this.chooseImageFolderToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.chooseImageFolderToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.chooseImageFolderToolStripMenuItem.Text = "Choose image folder";
             this.chooseImageFolderToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFolderToolStripMenuItem_Click);
+            // 
+            // generateFormInspirobotToolStripMenuItem
+            // 
+            this.generateFormInspirobotToolStripMenuItem.Name = "generateFormInspirobotToolStripMenuItem";
+            this.generateFormInspirobotToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.generateFormInspirobotToolStripMenuItem.Text = "Generate from inspirobot.me";
+            this.generateFormInspirobotToolStripMenuItem.Click += new System.EventHandler(this.GenerateFormInspirobotToolStripMenuItem_Click);
             // 
             // picturesLsv
             // 
@@ -147,13 +153,6 @@
             this.btnUnlike.UseVisualStyleBackColor = true;
             this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
             // 
-            // generateFormInspirobotToolStripMenuItem
-            // 
-            this.generateFormInspirobotToolStripMenuItem.Name = "generateFormInspirobotToolStripMenuItem";
-            this.generateFormInspirobotToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.generateFormInspirobotToolStripMenuItem.Text = "Generate from inspirobot.me";
-            this.generateFormInspirobotToolStripMenuItem.Click += new System.EventHandler(this.GenerateFormInspirobotToolStripMenuItem_Click);
-            // 
             // ThemePacker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,6 +171,7 @@
             this.Name = "ThemePacker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ThemePacker";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ThemePacker_FormClosed);
             this.Load += new System.EventHandler(this.ThemePacker_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).EndInit();
             this.menuStrip1.ResumeLayout(false);
