@@ -33,7 +33,7 @@
             this.pbProgression = new System.Windows.Forms.ProgressBar();
             this.btnGenerate = new System.Windows.Forms.Button();
             this.btnLike = new System.Windows.Forms.Button();
-            this.btnUnlike = new System.Windows.Forms.Button();
+            this.btnPrevious = new System.Windows.Forms.Button();
             this.pbWallpaper = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,7 +50,7 @@
             this.btnNext.TabIndex = 17;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.btnNext.Click += new System.EventHandler(this.BtnNext_Click);
             // 
             // pbProgression
             // 
@@ -67,7 +67,7 @@
             this.btnGenerate.TabIndex = 15;
             this.btnGenerate.Text = "Generate";
             this.btnGenerate.UseVisualStyleBackColor = true;
-            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
+            this.btnGenerate.Click += new System.EventHandler(this.BtnGenerate_Click);
             // 
             // btnLike
             // 
@@ -77,17 +77,17 @@
             this.btnLike.TabIndex = 14;
             this.btnLike.Text = "I LIKE DAT";
             this.btnLike.UseVisualStyleBackColor = true;
-            this.btnLike.Click += new System.EventHandler(this.btnLike_Click);
+            this.btnLike.Click += new System.EventHandler(this.BtnLike_Click);
             // 
-            // btnUnlike
+            // btnPrevious
             // 
-            this.btnUnlike.Location = new System.Drawing.Point(69, 448);
-            this.btnUnlike.Name = "btnUnlike";
-            this.btnUnlike.Size = new System.Drawing.Size(106, 42);
-            this.btnUnlike.TabIndex = 13;
-            this.btnUnlike.Text = "Previous";
-            this.btnUnlike.UseVisualStyleBackColor = true;
-            this.btnUnlike.Click += new System.EventHandler(this.btnUnlike_Click);
+            this.btnPrevious.Location = new System.Drawing.Point(69, 448);
+            this.btnPrevious.Name = "btnPrevious";
+            this.btnPrevious.Size = new System.Drawing.Size(106, 42);
+            this.btnPrevious.TabIndex = 13;
+            this.btnPrevious.Text = "Previous";
+            this.btnPrevious.UseVisualStyleBackColor = true;
+            this.btnPrevious.Click += new System.EventHandler(this.BtnPrevious_Click);
             // 
             // pbWallpaper
             // 
@@ -133,7 +133,7 @@
             this.Controls.Add(this.pbProgression);
             this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.btnLike);
-            this.Controls.Add(this.btnUnlike);
+            this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.pbWallpaper);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -155,7 +155,7 @@
         private System.Windows.Forms.ProgressBar pbProgression;
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Button btnLike;
-        private System.Windows.Forms.Button btnUnlike;
+        private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.PictureBox pbWallpaper;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;

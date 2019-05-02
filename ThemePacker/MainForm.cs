@@ -15,8 +15,7 @@ namespace TheFullFacebook
     public partial class TheFacebook : Form
     {
         private List<string> _likeds;
-        private List<Image> _pictures;
-        private List<string> _picturePath;
+        private Dictionary<string, Image> _pictures;
         private string _path;
         private int _currentPic;
 
@@ -30,11 +29,10 @@ namespace TheFullFacebook
             btnGenerate.Enabled = false;
             btnLike.Enabled = false;
             btnNext.Enabled = false;
-            btnUnlike.Enabled = false;
+            btnPrevious.Enabled = false;
             _currentPic = 0;
             _likeds = new List<string>();
-            _pictures = new List<Image>();
-            _picturePath = new List<string>();
+            _pictures = new Dictionary<string, Image>();
         }
 
         private void ChooseImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -50,7 +48,7 @@ namespace TheFullFacebook
                     btnGenerate.Enabled = true;
                     btnLike.Enabled = true;
                     btnNext.Enabled = true;
-                    btnUnlike.Enabled = true;
+                    btnPrevious.Enabled = true;
                     ListShuffle();
                     UpdatePic();
                 }
@@ -60,7 +58,7 @@ namespace TheFullFacebook
         private void ListShuffle()
         {
             Random rng = new Random();
-            _pictures = _pictures.OrderBy(p => rng.Next()).ToList();
+            _pictures = _pictures.OrderBy(x => rng.Next()).ToDictionary(item => item.Key, item => item.Value);
         }
 
         private bool SelectPic()
@@ -74,13 +72,12 @@ namespace TheFullFacebook
             }
             foreach (string s in imagesList)
             {
-                _pictures.Add(Image.FromFile(s));
-                _picturePath.Add(s);
+                _pictures.Add(s,Image.FromFile(s));
             }
             return true;
         }
 
-        private void btnUnlike_Click(object sender, EventArgs e)
+        private void BtnPrevious_Click(object sender, EventArgs e)
         {
             if (_currentPic != 0)
             {
@@ -95,11 +92,11 @@ namespace TheFullFacebook
 
         private void UpdatePic()
         {
-            pbWallpaper.Image = _pictures[_currentPic];
+            pbWallpaper.Image = _pictures.ElementAt(_currentPic).Value;
             pbProgression.Value = (_currentPic * 100) / (_pictures.Count - 1);
         }
 
-        private void btnNext_Click(object sender, EventArgs e)
+        private void BtnNext_Click(object sender, EventArgs e)
         {
             if (_currentPic != _pictures.Count - 1)
             {
@@ -112,12 +109,13 @@ namespace TheFullFacebook
             }
         }
 
-        private void btnLike_Click(object sender, EventArgs e)
+        private void BtnLike_Click(object sender, EventArgs e)
         {
-            if (!_likeds.Contains(_picturePath[_currentPic]))
+            string currentPath = _pictures.ElementAt(_currentPic).Key;
+            if (!_likeds.Contains(currentPath))
             {
-                _likeds.Add(_picturePath[_currentPic]);
-                btnNext_Click(null, null);
+                _likeds.Add(currentPath);
+                BtnNext_Click(null, null);
             }
             else
             {
@@ -125,7 +123,7 @@ namespace TheFullFacebook
             }
         }
 
-        private void btnGenerate_Click(object sender, EventArgs e)
+        private void BtnGenerate_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Themepack | *.themepack";
