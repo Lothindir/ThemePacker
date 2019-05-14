@@ -33,6 +33,9 @@ namespace ThemePacker
 
         private void ThemePacker_Load(object sender, EventArgs e)
         {
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
             btnGenerate.Enabled = false;
             btnLike.Enabled = false;
             btnNext.Enabled = false;
@@ -143,6 +146,7 @@ namespace ThemePacker
             {
                 MessageBox.Show("DIS IS ZE BEGINING (joy face)");
             }
+            //Hide();
         }
 
         private void UpdatePic()
@@ -189,16 +193,20 @@ namespace ThemePacker
 
         private void BtnGenerate_Click(object sender, EventArgs e)
         {
-            Hide();
-            /*OptionDialogBox opb = new OptionDialogBox();
-            opb.Show();*/
+            OptionDialogBox opb = new OptionDialogBox();
+            opb.ShowDialog();
+            opb.Focus();
+            Generate();
+        }
 
+        public void Generate()
+        {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Themepack | *.themepack";
             saveFileDialog.Title = "Enregistrer";
             saveFileDialog.ShowDialog();
 
-            if(saveFileDialog.FileName == null || saveFileDialog.FileName == string.Empty)
+            if (saveFileDialog.FileName == null || saveFileDialog.FileName == string.Empty)
             {
                 Show();
                 return;
@@ -217,9 +225,8 @@ namespace ThemePacker
 
             CabInfo cab = new CabInfo(saveFileDialog.FileName);
             cab.Pack("temp", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
-            
-            Environment.Exit(7);
 
+            Environment.Exit(7);
         }
 
         private void CopyQuick()

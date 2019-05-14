@@ -16,5 +16,17 @@ namespace ThemePacker
         {
             InitializeComponent();
         }
+
+        private void OptionDialogBox_Load(object sender, EventArgs e)
+        {
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+        }
+
+        private void BtnGenerateFromDB_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
