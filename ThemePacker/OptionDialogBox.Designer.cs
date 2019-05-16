@@ -28,24 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cbPicPos = new System.Windows.Forms.ComboBox();
             this.lblChangePosition = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.cbTimeChange = new System.Windows.Forms.ComboBox();
             this.lblChangeTime = new System.Windows.Forms.Label();
             this.btnGenerateFromDB = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // comboBox1
+            // cbPicPos
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Remplissage",
-            "Ajuster"});
-            this.comboBox1.Location = new System.Drawing.Point(32, 40);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(108, 21);
-            this.comboBox1.TabIndex = 0;
+            this.cbPicPos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPicPos.FormattingEnabled = true;
+            this.cbPicPos.Items.AddRange(new object[] {
+            "Fill",
+            "Fit",
+            "Stretch",
+            "Tile",
+            "Center"});
+            this.cbPicPos.Location = new System.Drawing.Point(32, 40);
+            this.cbPicPos.Name = "cbPicPos";
+            this.cbPicPos.Size = new System.Drawing.Size(108, 21);
+            this.cbPicPos.TabIndex = 0;
+            this.cbPicPos.SelectedIndexChanged += new System.EventHandler(this.CbPicPos_SelectedIndexChanged);
             // 
             // lblChangePosition
             // 
@@ -56,14 +60,24 @@
             this.lblChangePosition.TabIndex = 1;
             this.lblChangePosition.Text = "Picture position";
             // 
-            // comboBox2
+            // cbTimeChange
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(207, 40);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(108, 21);
-            this.comboBox2.TabIndex = 2;
+            this.cbTimeChange.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTimeChange.FormattingEnabled = true;
+            this.cbTimeChange.Items.AddRange(new object[] {
+            "10 seconds",
+            "30 seconds",
+            "1 minute",
+            "5 minutes",
+            "10 minutes",
+            "20 minutes",
+            "30 minutes",
+            "1 hour"});
+            this.cbTimeChange.Location = new System.Drawing.Point(207, 40);
+            this.cbTimeChange.Name = "cbTimeChange";
+            this.cbTimeChange.Size = new System.Drawing.Size(108, 21);
+            this.cbTimeChange.TabIndex = 2;
+            this.cbTimeChange.SelectedIndexChanged += new System.EventHandler(this.CbTimeChange_SelectedIndexChanged);
             // 
             // lblChangeTime
             // 
@@ -91,9 +105,9 @@
             this.ClientSize = new System.Drawing.Size(345, 169);
             this.Controls.Add(this.btnGenerateFromDB);
             this.Controls.Add(this.lblChangeTime);
-            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.cbTimeChange);
             this.Controls.Add(this.lblChangePosition);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cbPicPos);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "OptionDialogBox";
             this.Text = "OptionDialogBox";
@@ -105,9 +119,9 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cbPicPos;
         private System.Windows.Forms.Label lblChangePosition;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox cbTimeChange;
         private System.Windows.Forms.Label lblChangeTime;
         private System.Windows.Forms.Button btnGenerateFromDB;
     }
