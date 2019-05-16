@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThemePacker));
             this.btnNext = new System.Windows.Forms.Button();
-            this.pbProgression = new System.Windows.Forms.ProgressBar();
             this.btnGenerate = new System.Windows.Forms.Button();
             this.btnLike = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
@@ -57,13 +56,6 @@
             this.btnNext.TabIndex = 17;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
-            // 
-            // pbProgression
-            // 
-            this.pbProgression.Location = new System.Drawing.Point(69, 496);
-            this.pbProgression.Name = "pbProgression";
-            this.pbProgression.Size = new System.Drawing.Size(400, 28);
-            this.pbProgression.TabIndex = 16;
             // 
             // btnGenerate
             // 
@@ -197,7 +189,6 @@
             this.Controls.Add(this.btnUnlike);
             this.Controls.Add(this.picturesLsv);
             this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.pbProgression);
             this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.btnLike);
             this.Controls.Add(this.btnPrevious);
@@ -220,7 +211,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.ProgressBar pbProgression;
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Button btnLike;
         private System.Windows.Forms.Button btnPrevious;

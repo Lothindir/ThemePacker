@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,11 +17,17 @@ namespace ThemePacker
 {
     public partial class ThemePacker : Form
     {
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern uint SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+
         private List<string> _likeds;
         private Dictionary<string, Image> _pictures;
         private string _path;
         private int _currentPic;
         private bool _isFolderBased;
+
+        private CustomProgressBar pbProgression;
 
         private EventHandler _btnNextClick;
 
@@ -29,6 +36,14 @@ namespace ThemePacker
         public ThemePacker()
         {
             InitializeComponent();
+            pbProgression = new CustomProgressBar(); pbProgression.Location = new Point(69, 496);
+            pbProgression.MarqueeAnimationSpeed = 0;
+            pbProgression.Name = "pbProgression";
+            pbProgression.Size = new Size(400, 28);
+            pbProgression.Style = ProgressBarStyle.Continuous;
+            pbProgression.TabIndex = 16;
+            pbProgression.DisplayStyle = ProgressBarDisplayText.CustomText;
+            Controls.Add(pbProgression);
         }
 
         private void ThemePacker_Load(object sender, EventArgs e)
@@ -152,7 +167,9 @@ namespace ThemePacker
         private void UpdatePic()
         {
             pbWallpaper.Image = _pictures.ElementAt(_currentPic).Value;
-            pbProgression.Value = (int) Math.Ceiling((_currentPic * 100) / (decimal)(_pictures.Count));
+            pbProgression.Value = (int)Math.Ceiling(((_currentPic + 1) * 100) / (decimal)(_pictures.Count));
+            pbProgression.CustomText = $"{_currentPic + 1} / {_pictures.Count}";
+            pbProgression.Refresh();
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
@@ -252,7 +269,7 @@ namespace ThemePacker
 
         private void PicturesLsv_Click(object sender, EventArgs e)
         {
-            if(picturesLsv.SelectedItems.Count > 0)
+            if (picturesLsv.SelectedItems.Count > 0)
             {
                 pbWallpaper.Image = _pictures[picturesLsv.SelectedItems[0].ImageKey];
             }
@@ -330,15 +347,10 @@ namespace ThemePacker
         private void ThemePacker_FormClosed(object sender, FormClosedEventArgs e)
         {
             ClearPictures();
-            if(Directory.Exists("temp"))
+            if (Directory.Exists("temp"))
             {
                 Directory.Delete("temp", true);
             }
-        }
-
-        ~ThemePacker()
-        {
-            ClearPictures();
         }
 
         private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -349,6 +361,11 @@ namespace ThemePacker
         private void AsImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        ~ThemePacker()
+        {
+            ClearPictures();
         }
     }
 }
