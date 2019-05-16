@@ -41,6 +41,7 @@
             this.generateFormInspirobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picturesLsv = new System.Windows.Forms.ListView();
             this.btnUnlike = new System.Windows.Forms.Button();
+            this.importThemepackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -115,7 +116,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chooseImageFolderToolStripMenuItem,
-            this.generateFormInspirobotToolStripMenuItem});
+            this.generateFormInspirobotToolStripMenuItem,
+            this.importThemepackToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -152,6 +154,13 @@
             this.btnUnlike.Text = "I dislike dis";
             this.btnUnlike.UseVisualStyleBackColor = true;
             this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
+            // 
+            // importThemepackToolStripMenuItem
+            // 
+            this.importThemepackToolStripMenuItem.Name = "importThemepackToolStripMenuItem";
+            this.importThemepackToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.importThemepackToolStripMenuItem.Text = "Import Themepack";
+            this.importThemepackToolStripMenuItem.Click += new System.EventHandler(this.ImportThemepackToolStripMenuItem_Click);
             // 
             // ThemePacker
             // 
@@ -195,6 +204,7 @@
         private System.Windows.Forms.ListView picturesLsv;
         private System.Windows.Forms.Button btnUnlike;
         private System.Windows.Forms.ToolStripMenuItem generateFormInspirobotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importThemepackToolStripMenuItem;
     }
 }
 

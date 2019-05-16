@@ -340,5 +340,10 @@ namespace ThemePacker
         {
             ClearPictures();
         }
+
+        private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
