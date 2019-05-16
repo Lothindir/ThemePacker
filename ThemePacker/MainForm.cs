@@ -345,5 +345,10 @@ namespace ThemePacker
         {
 
         }
+
+        private void AsImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
