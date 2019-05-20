@@ -64,7 +64,7 @@ namespace ThemePacker
             picturesLsv.LargeImageList = _imageList;
             picturesLsv.View = View.LargeIcon;
 
-            CreateDirectory("temp");//crée un dossier temporaire
+            CreateDirectory("temp\\themepack");//crée un dossier temporaire
         }
 
         private void ClearPictures()
@@ -128,10 +128,15 @@ namespace ThemePacker
             _pictures = _pictures.OrderBy(x => rng.Next()).ToDictionary(item => item.Key, item => item.Value);
         }
 
-        private bool SelectPic()
+        private bool SelectPic(string path = null)
         {
-            List<string> imagesList = Directory.GetFiles(_path, "*.jpg", SearchOption.TopDirectoryOnly).ToList();
-            imagesList.AddRange(Directory.GetFiles(_path, "*.png", SearchOption.TopDirectoryOnly));
+            if(path == null)
+            {
+                path = _path;
+            }
+
+            List<string> imagesList = Directory.GetFiles(path, "*.jpg", SearchOption.TopDirectoryOnly).ToList();
+            imagesList.AddRange(Directory.GetFiles(path, "*.png", SearchOption.TopDirectoryOnly));
             if (imagesList.Count < 1)
             {
                 MessageBox.Show("Votre dossier ne contient pas d'image ou pas le bon type d'image. (png et jpg only)");
@@ -158,7 +163,6 @@ namespace ThemePacker
             {
                 MessageBox.Show("DIS IS ZE BEGINING (joy face)");
             }
-            //Hide();
         }
 
         private void UpdatePic()
@@ -240,32 +244,23 @@ namespace ThemePacker
             theme["Slideshow"]["Interval"] = "60000";
 
             tfs.JSON = theme;
-            tfs.JsonSerialize();
-
-            //read and replace
-            string text = File.ReadAllText("temp\\super.theme");
-            File.WriteAllText("temp\\super.theme", text);
+            tfs.JsonSerialize($"temp\\themepack\\{fileName}.theme");
 
             CabInfo cab = new CabInfo(saveFileDialog.FileName);
-            cab.Pack("temp", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
+            cab.Pack("temp\\themepack", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
 
-            Environment.Exit(7);
-        }
-
-        private void SetThemeFileSerializerProperty(dynamic theme, string category, string property, string value)
-        {
-            ((theme as IDictionary<string, object>)[category] as IDictionary<string, object>)[property] = value;
+            this.Close();
         }
 
         private void CopyQuick()
         {
             foreach (string path in _likeds)
             {
-                File.Copy(path, "temp\\DesktopBackground\\" + new FileInfo(path).Name);
+                File.Copy(path, "temp\\themepack\\DesktopBackground\\" + new FileInfo(path).Name);
             }
 
             File.Copy("Resources\\super.theme", "temp\\super.theme", true);
-            File.Copy("Resources\\icon.png", "temp\\icon.png", true);
+            File.Copy("Resources\\icon.png", "temp\\themepack\\icon.png", true);
         }
 
         private void CreateDirectory(string path)
@@ -327,6 +322,8 @@ namespace ThemePacker
 
         private async Task GetImageFromInspirobot()
         {
+            Directory.CreateDirectory(@"temp\images");
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://inspirobot.me/");
@@ -342,7 +339,7 @@ namespace ThemePacker
                     {
                         string[] urlBits = url.Split("/".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                         string fileName = urlBits[urlBits.Length - 1];
-                        string imagePath = $"temp\\{fileName}";
+                        string imagePath = $"temp\\images\\{fileName}";
 
                         Debug.WriteLine($"Starting {fileName} download");
                         webClient.DownloadFile(new Uri(url), imagePath);
@@ -366,7 +363,29 @@ namespace ThemePacker
 
         private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Themepack | *.themepack";
+            openFileDialog.Title = "Ouvrir";
 
+            if(openFileDialog.ShowDialog() == DialogResult.OK && openFileDialog.FileName.EndsWith(".themepack"))
+            {
+
+                string filename = $"temp\\{openFileDialog.FileName.Split('\\').Last()}";
+                File.Copy(openFileDialog.FileName, filename);
+                File.Move(filename, filename = filename.Replace(".themepack", ".cab"));
+
+                CabInfo cab = new CabInfo(filename);
+                _path = filename.Split('.')[0];
+                cab.Unpack(_path);
+
+                if (SelectPic(_path + "\\DesktopBackground"))
+                {
+                    btnLike.Enabled = true;
+                    btnNext.Enabled = true;
+                    btnPrevious.Enabled = true;
+                    UpdatePic();
+                }
+            }
         }
 
         private void AsImageFolderToolStripMenuItem_Click(object sender, EventArgs e)

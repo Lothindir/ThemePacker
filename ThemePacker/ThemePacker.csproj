@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3CA13A26-7504-49A3-8E0E-0B0700472625}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TheFullFacebook</RootNamespace>
-    <AssemblyName>TheFullFacebook</AssemblyName>
+    <RootNamespace>ThemePacker</RootNamespace>
+    <AssemblyName>ThemePacker</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -87,6 +87,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

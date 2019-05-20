@@ -104,9 +104,13 @@ namespace ThemePacker
             if (path == null)
                 path = _path;
 
+            string dir = path.Split('\\').Where(d => !d.Contains(".")).Aggregate((i,j) => i + "\\" + j);
+
+            Directory.CreateDirectory(dir);
+
             var themeDic = JSON.ToObject<Dictionary<string, Dictionary<string, string>>>();
 
-            using (StreamWriter sw = new StreamWriter(path))
+            using (StreamWriter sw = new StreamWriter(path, false))
             {
                 foreach (var category in themeDic)
                 {
