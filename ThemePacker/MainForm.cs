@@ -1,4 +1,5 @@
 ﻿using Microsoft.Deployment.Compression.Cab;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,9 +26,8 @@ namespace ThemePacker
         private Dictionary<string, Image> _pictures;
         private string _path;
         private int _currentPic;
-        private bool _isFolderBased;
 
-        private CustomProgressBar pbProgression;
+        private CustomProgressBar _pbProgression;
 
         private EventHandler _btnNextClick;
 
@@ -36,14 +36,14 @@ namespace ThemePacker
         public ThemePacker()
         {
             InitializeComponent();
-            pbProgression = new CustomProgressBar(); pbProgression.Location = new Point(69, 496);
-            pbProgression.MarqueeAnimationSpeed = 0;
-            pbProgression.Name = "pbProgression";
-            pbProgression.Size = new Size(400, 28);
-            pbProgression.Style = ProgressBarStyle.Continuous;
-            pbProgression.TabIndex = 16;
-            pbProgression.DisplayStyle = ProgressBarDisplayText.CustomText;
-            Controls.Add(pbProgression);
+            _pbProgression = new CustomProgressBar(); _pbProgression.Location = new Point(69, 496);
+            _pbProgression.MarqueeAnimationSpeed = 0;
+            _pbProgression.Name = "pbProgression";
+            _pbProgression.Size = new Size(400, 28);
+            _pbProgression.Style = ProgressBarStyle.Continuous;
+            _pbProgression.TabIndex = 16;
+            _pbProgression.DisplayStyle = ProgressBarDisplayText.CustomText;
+            Controls.Add(_pbProgression);
         }
 
         private void ThemePacker_Load(object sender, EventArgs e)
@@ -98,7 +98,6 @@ namespace ThemePacker
                     btnNext.Enabled = true;
                     btnPrevious.Enabled = true;
                     ListShuffle();
-                    _isFolderBased = true;
                     UpdatePic();
                 }
             }
@@ -112,8 +111,6 @@ namespace ThemePacker
             await GetImageFromInspirobot();
 
             _currentPic = 0;
-
-            _isFolderBased = false;
 
             _btnNextClick = BtnNext_Click_API;
             btnNext.Click += _btnNextClick;
@@ -167,9 +164,9 @@ namespace ThemePacker
         private void UpdatePic()
         {
             pbWallpaper.Image = _pictures.ElementAt(_currentPic).Value;
-            pbProgression.Value = (int)Math.Ceiling(((_currentPic + 1) * 100) / (decimal)(_pictures.Count));
-            pbProgression.CustomText = $"{_currentPic + 1} / {_pictures.Count}";
-            pbProgression.Refresh();
+            _pbProgression.Value = (int)Math.Ceiling(((_currentPic + 1) * 100) / (decimal)(_pictures.Count));
+            _pbProgression.CustomText = $"{_currentPic + 1} / {_pictures.Count}";
+            _pbProgression.Refresh();
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
@@ -234,16 +231,30 @@ namespace ThemePacker
 
             CopyQuick();
 
+            ThemeFileSerializer tfs = new ThemeFileSerializer("temp\\super.theme");
+            tfs.Deserialize();
+            JObject theme = tfs.JSON;
+            theme["Theme"]["DisplayName"] = fileName;
+            theme["Control Panel_Desktop"]["TileWallpaper"] = "0";
+            theme["Control Panel_Desktop"]["WallpaperStyle"] = "2";
+            theme["Slideshow"]["Interval"] = "60000";
+
+            tfs.JSON = theme;
+            tfs.JsonSerialize();
 
             //read and replace
             string text = File.ReadAllText("temp\\super.theme");
-            text = text.Replace("DisplayName=Tinderspirobot", "DisplayName=" + fileName);
             File.WriteAllText("temp\\super.theme", text);
 
             CabInfo cab = new CabInfo(saveFileDialog.FileName);
             cab.Pack("temp", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
 
             Environment.Exit(7);
+        }
+
+        private void SetThemeFileSerializerProperty(dynamic theme, string category, string property, string value)
+        {
+            ((theme as IDictionary<string, object>)[category] as IDictionary<string, object>)[property] = value;
         }
 
         private void CopyQuick()
