@@ -24,6 +24,7 @@ namespace ThemePacker
 
         private List<string> _likeds;
         private Dictionary<string, Image> _pictures;
+        private Dictionary<string, bool> _shownImages;
         private string _path;
         private int _currentPic;
 
@@ -55,9 +56,11 @@ namespace ThemePacker
             btnLike.Enabled = false;
             btnNext.Enabled = false;
             btnPrevious.Enabled = false;
+            btnUnlike.Enabled = false;
             _currentPic = 0;
             _likeds = new List<string>();
             _pictures = new Dictionary<string, Image>();
+            _shownImages = new Dictionary<string, bool>();
             _imageList = new ImageList();
             _imageList.ImageSize = new Size(128, 128);
             _imageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -97,7 +100,6 @@ namespace ThemePacker
                     btnLike.Enabled = true;
                     btnNext.Enabled = true;
                     btnPrevious.Enabled = true;
-                    ListShuffle();
                     UpdatePic();
                 }
             }
@@ -122,10 +124,39 @@ namespace ThemePacker
             UpdatePic();
         }
 
-        private void ListShuffle()
+        private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Random rng = new Random();
-            _pictures = _pictures.OrderBy(x => rng.Next()).ToDictionary(item => item.Key, item => item.Value);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Themepack | *.themepack";
+            openFileDialog.Title = "Ouvrir";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK && openFileDialog.FileName.EndsWith(".themepack"))
+            {
+
+                string filename = $"temp\\{openFileDialog.FileName.Split('\\').Last()}";
+                File.Copy(openFileDialog.FileName, filename);
+                File.Move(filename, filename = filename.Replace(".themepack", ".cab"));
+
+                CabInfo cab = new CabInfo(filename);
+                _path = filename.Split('.')[0];
+                cab.Unpack(_path);
+
+                _btnNextClick = BtnNext_Click;
+                btnNext.Click += _btnNextClick;
+
+                if (SelectPic(_path + "\\DesktopBackground"))
+                {
+                    btnLike.Enabled = true;
+                    btnNext.Enabled = true;
+                    btnPrevious.Enabled = true;
+                    UpdatePic();
+                }
+
+                foreach (var pics in _pictures)
+                {
+                    BtnLike_Click(null, null);
+                }
+            }
         }
 
         private bool SelectPic(string path = null)
@@ -159,10 +190,6 @@ namespace ThemePacker
                 _currentPic--;
                 UpdatePic();
             }
-            else
-            {
-                MessageBox.Show("DIS IS ZE BEGINING (joy face)");
-            }
         }
 
         private void UpdatePic()
@@ -180,15 +207,12 @@ namespace ThemePacker
                 _currentPic++;
                 UpdatePic();
             }
-            else
-            {
-                MessageBox.Show("DIS IS ZE END (sad face)");
-            }
         }
 
         private void BtnLike_Click(object sender, EventArgs e)
         {
             btnGenerate.Enabled = true;
+            btnUnlike.Enabled = true;
 
             var currentImg = _pictures.ElementAt(_currentPic);
             if (!_likeds.Contains(currentImg.Key))
@@ -294,6 +318,11 @@ namespace ThemePacker
 
                 UpdatePic();
             }
+
+            if(picturesLsv.Items.Count == 0)
+            {
+                btnUnlike.Enabled = false;
+            }
         }
 
         private async void BtnNext_Click_API(object sender, EventArgs e)
@@ -352,42 +381,6 @@ namespace ThemePacker
             }
         }
 
-        private void ThemePacker_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            ClearPictures();
-            if (Directory.Exists("temp"))
-            {
-                Directory.Delete("temp", true);
-            }
-        }
-
-        private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Themepack | *.themepack";
-            openFileDialog.Title = "Ouvrir";
-
-            if(openFileDialog.ShowDialog() == DialogResult.OK && openFileDialog.FileName.EndsWith(".themepack"))
-            {
-
-                string filename = $"temp\\{openFileDialog.FileName.Split('\\').Last()}";
-                File.Copy(openFileDialog.FileName, filename);
-                File.Move(filename, filename = filename.Replace(".themepack", ".cab"));
-
-                CabInfo cab = new CabInfo(filename);
-                _path = filename.Split('.')[0];
-                cab.Unpack(_path);
-
-                if (SelectPic(_path + "\\DesktopBackground"))
-                {
-                    btnLike.Enabled = true;
-                    btnNext.Enabled = true;
-                    btnPrevious.Enabled = true;
-                    UpdatePic();
-                }
-            }
-        }
-
         private void AsImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -396,6 +389,15 @@ namespace ThemePacker
         ~ThemePacker()
         {
             ClearPictures();
+        }
+
+        private void ThemePacker_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ClearPictures();
+            if (Directory.Exists("temp"))
+            {
+                Directory.Delete("temp", true);
+            }
         }
     }
 }

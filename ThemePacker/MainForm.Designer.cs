@@ -36,14 +36,14 @@
             this.pbWallpaper = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.picturesLsv = new System.Windows.Forms.ListView();
-            this.btnUnlike = new System.Windows.Forms.Button();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fromImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fromInspirobotmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fromThemepackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.picturesLsv = new System.Windows.Forms.ListView();
+            this.btnUnlike = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -116,25 +116,6 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // picturesLsv
-            // 
-            this.picturesLsv.Location = new System.Drawing.Point(497, 27);
-            this.picturesLsv.Name = "picturesLsv";
-            this.picturesLsv.Size = new System.Drawing.Size(608, 497);
-            this.picturesLsv.TabIndex = 19;
-            this.picturesLsv.UseCompatibleStateImageBehavior = false;
-            this.picturesLsv.Click += new System.EventHandler(this.PicturesLsv_Click);
-            // 
-            // btnUnlike
-            // 
-            this.btnUnlike.Location = new System.Drawing.Point(680, 530);
-            this.btnUnlike.Name = "btnUnlike";
-            this.btnUnlike.Size = new System.Drawing.Size(135, 42);
-            this.btnUnlike.TabIndex = 20;
-            this.btnUnlike.Text = "I dislike dis";
-            this.btnUnlike.UseVisualStyleBackColor = true;
-            this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
-            // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -181,6 +162,25 @@
             this.asImageFolderToolStripMenuItem.Text = "... as image folder";
             this.asImageFolderToolStripMenuItem.Click += new System.EventHandler(this.AsImageFolderToolStripMenuItem_Click);
             // 
+            // picturesLsv
+            // 
+            this.picturesLsv.Location = new System.Drawing.Point(497, 27);
+            this.picturesLsv.Name = "picturesLsv";
+            this.picturesLsv.Size = new System.Drawing.Size(608, 497);
+            this.picturesLsv.TabIndex = 19;
+            this.picturesLsv.UseCompatibleStateImageBehavior = false;
+            this.picturesLsv.Click += new System.EventHandler(this.PicturesLsv_Click);
+            // 
+            // btnUnlike
+            // 
+            this.btnUnlike.Location = new System.Drawing.Point(680, 530);
+            this.btnUnlike.Name = "btnUnlike";
+            this.btnUnlike.Size = new System.Drawing.Size(135, 42);
+            this.btnUnlike.TabIndex = 20;
+            this.btnUnlike.Text = "I dislike dis";
+            this.btnUnlike.UseVisualStyleBackColor = true;
+            this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
+            // 
             // ThemePacker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,7 +198,7 @@
             this.Name = "ThemePacker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ThemePacker";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ThemePacker_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ThemePacker_FormClosing);
             this.Load += new System.EventHandler(this.ThemePacker_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).EndInit();
             this.menuStrip1.ResumeLayout(false);
