@@ -1,4 +1,5 @@
 ﻿using Microsoft.Deployment.Compression.Cab;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,11 +18,17 @@ namespace ThemePacker
 {
     public partial class ThemePacker : Form
     {
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern uint SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+
         private List<string> _likeds;
         private Dictionary<string, Image> _pictures;
+        private Dictionary<string, bool> _shownImages;
         private string _path;
         private int _currentPic;
-        private bool _isFolderBased;
+
+        private CustomProgressBar _pbProgression;
 
         private EventHandler _btnNextClick;
 
@@ -29,6 +37,14 @@ namespace ThemePacker
         public ThemePacker()
         {
             InitializeComponent();
+            _pbProgression = new CustomProgressBar(); _pbProgression.Location = new Point(69, 496);
+            _pbProgression.MarqueeAnimationSpeed = 0;
+            _pbProgression.Name = "pbProgression";
+            _pbProgression.Size = new Size(400, 28);
+            _pbProgression.Style = ProgressBarStyle.Continuous;
+            _pbProgression.TabIndex = 16;
+            _pbProgression.DisplayStyle = ProgressBarDisplayText.CustomText;
+            Controls.Add(_pbProgression);
         }
 
         private void ThemePacker_Load(object sender, EventArgs e)
@@ -40,16 +56,18 @@ namespace ThemePacker
             btnLike.Enabled = false;
             btnNext.Enabled = false;
             btnPrevious.Enabled = false;
+            btnUnlike.Enabled = false;
             _currentPic = 0;
             _likeds = new List<string>();
             _pictures = new Dictionary<string, Image>();
+            _shownImages = new Dictionary<string, bool>();
             _imageList = new ImageList();
             _imageList.ImageSize = new Size(128, 128);
             _imageList.ColorDepth = ColorDepth.Depth32Bit;
             picturesLsv.LargeImageList = _imageList;
             picturesLsv.View = View.LargeIcon;
 
-            CreateDirectory("temp");//crée un dossier temporaire
+            CreateDirectory("temp\\themepack");//crée un dossier temporaire
         }
 
         private void ClearPictures()
@@ -82,8 +100,6 @@ namespace ThemePacker
                     btnLike.Enabled = true;
                     btnNext.Enabled = true;
                     btnPrevious.Enabled = true;
-                    ListShuffle();
-                    _isFolderBased = true;
                     UpdatePic();
                 }
             }
@@ -98,8 +114,6 @@ namespace ThemePacker
 
             _currentPic = 0;
 
-            _isFolderBased = false;
-
             _btnNextClick = BtnNext_Click_API;
             btnNext.Click += _btnNextClick;
 
@@ -110,16 +124,50 @@ namespace ThemePacker
             UpdatePic();
         }
 
-        private void ListShuffle()
+        private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Random rng = new Random();
-            _pictures = _pictures.OrderBy(x => rng.Next()).ToDictionary(item => item.Key, item => item.Value);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Themepack | *.themepack";
+            openFileDialog.Title = "Ouvrir";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK && openFileDialog.FileName.EndsWith(".themepack"))
+            {
+
+                string filename = $"temp\\{openFileDialog.FileName.Split('\\').Last()}";
+                File.Copy(openFileDialog.FileName, filename);
+                File.Move(filename, filename = filename.Replace(".themepack", ".cab"));
+
+                CabInfo cab = new CabInfo(filename);
+                _path = filename.Split('.')[0];
+                cab.Unpack(_path);
+
+                _btnNextClick = BtnNext_Click;
+                btnNext.Click += _btnNextClick;
+
+                if (SelectPic(_path + "\\DesktopBackground"))
+                {
+                    btnLike.Enabled = true;
+                    btnNext.Enabled = true;
+                    btnPrevious.Enabled = true;
+                    UpdatePic();
+                }
+
+                foreach (var pics in _pictures)
+                {
+                    BtnLike_Click(null, null);
+                }
+            }
         }
 
-        private bool SelectPic()
+        private bool SelectPic(string path = null)
         {
-            List<string> imagesList = Directory.GetFiles(_path, "*.jpg", SearchOption.TopDirectoryOnly).ToList();
-            imagesList.AddRange(Directory.GetFiles(_path, "*.png", SearchOption.TopDirectoryOnly));
+            if(path == null)
+            {
+                path = _path;
+            }
+
+            List<string> imagesList = Directory.GetFiles(path, "*.jpg", SearchOption.TopDirectoryOnly).ToList();
+            imagesList.AddRange(Directory.GetFiles(path, "*.png", SearchOption.TopDirectoryOnly));
             if (imagesList.Count < 1)
             {
                 MessageBox.Show("Votre dossier ne contient pas d'image ou pas le bon type d'image. (png et jpg only)");
@@ -142,17 +190,14 @@ namespace ThemePacker
                 _currentPic--;
                 UpdatePic();
             }
-            else
-            {
-                MessageBox.Show("DIS IS ZE BEGINING (joy face)");
-            }
-            //Hide();
         }
 
         private void UpdatePic()
         {
             pbWallpaper.Image = _pictures.ElementAt(_currentPic).Value;
-            pbProgression.Value = (int) Math.Ceiling((_currentPic * 100) / (decimal)(_pictures.Count));
+            _pbProgression.Value = (int)Math.Ceiling(((_currentPic + 1) * 100) / (decimal)(_pictures.Count));
+            _pbProgression.CustomText = $"{_currentPic + 1} / {_pictures.Count}";
+            _pbProgression.Refresh();
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
@@ -162,15 +207,12 @@ namespace ThemePacker
                 _currentPic++;
                 UpdatePic();
             }
-            else
-            {
-                MessageBox.Show("DIS IS ZE END (sad face)");
-            }
         }
 
         private void BtnLike_Click(object sender, EventArgs e)
         {
             btnGenerate.Enabled = true;
+            btnUnlike.Enabled = true;
 
             var currentImg = _pictures.ElementAt(_currentPic);
             if (!_likeds.Contains(currentImg.Key))
@@ -217,27 +259,32 @@ namespace ThemePacker
 
             CopyQuick();
 
+            ThemeFileSerializer tfs = new ThemeFileSerializer("temp\\super.theme");
+            tfs.Deserialize();
+            JObject theme = tfs.JSON;
+            theme["Theme"]["DisplayName"] = fileName;
+            theme["Control Panel_Desktop"]["TileWallpaper"] = "0";
+            theme["Control Panel_Desktop"]["WallpaperStyle"] = "2";
+            theme["Slideshow"]["Interval"] = "60000";
 
-            //read and replace
-            string text = File.ReadAllText("temp\\super.theme");
-            text = text.Replace("DisplayName=Tinderspirobot", "DisplayName=" + fileName);
-            File.WriteAllText("temp\\super.theme", text);
+            tfs.JSON = theme;
+            tfs.JsonSerialize($"temp\\themepack\\{fileName}.theme");
 
             CabInfo cab = new CabInfo(saveFileDialog.FileName);
-            cab.Pack("temp", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
+            cab.Pack("temp\\themepack", true, Microsoft.Deployment.Compression.CompressionLevel.Normal, null);
 
-            Environment.Exit(7);
+            this.Close();
         }
 
         private void CopyQuick()
         {
             foreach (string path in _likeds)
             {
-                File.Copy(path, "temp\\DesktopBackground\\" + new FileInfo(path).Name);
+                File.Copy(path, "temp\\themepack\\DesktopBackground\\" + new FileInfo(path).Name);
             }
 
             File.Copy("Resources\\super.theme", "temp\\super.theme", true);
-            File.Copy("Resources\\icon.png", "temp\\icon.png", true);
+            File.Copy("Resources\\icon.png", "temp\\themepack\\icon.png", true);
         }
 
         private void CreateDirectory(string path)
@@ -252,7 +299,7 @@ namespace ThemePacker
 
         private void PicturesLsv_Click(object sender, EventArgs e)
         {
-            if(picturesLsv.SelectedItems.Count > 0)
+            if (picturesLsv.SelectedItems.Count > 0)
             {
                 pbWallpaper.Image = _pictures[picturesLsv.SelectedItems[0].ImageKey];
             }
@@ -270,6 +317,11 @@ namespace ThemePacker
                 }
 
                 UpdatePic();
+            }
+
+            if(picturesLsv.Items.Count == 0)
+            {
+                btnUnlike.Enabled = false;
             }
         }
 
@@ -299,6 +351,8 @@ namespace ThemePacker
 
         private async Task GetImageFromInspirobot()
         {
+            Directory.CreateDirectory(@"temp\images");
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://inspirobot.me/");
@@ -314,7 +368,7 @@ namespace ThemePacker
                     {
                         string[] urlBits = url.Split("/".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                         string fileName = urlBits[urlBits.Length - 1];
-                        string imagePath = $"temp\\{fileName}";
+                        string imagePath = $"temp\\images\\{fileName}";
 
                         Debug.WriteLine($"Starting {fileName} download");
                         webClient.DownloadFile(new Uri(url), imagePath);
@@ -327,13 +381,9 @@ namespace ThemePacker
             }
         }
 
-        private void ThemePacker_FormClosed(object sender, FormClosedEventArgs e)
+        private void AsImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClearPictures();
-            if(Directory.Exists("temp"))
-            {
-                Directory.Delete("temp", true);
-            }
+
         }
 
         ~ThemePacker()
@@ -341,9 +391,13 @@ namespace ThemePacker
             ClearPictures();
         }
 
-        private void ImportThemepackToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ThemePacker_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            ClearPictures();
+            if (Directory.Exists("temp"))
+            {
+                Directory.Delete("temp", true);
+            }
         }
     }
 }

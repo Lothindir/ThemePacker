@@ -30,18 +30,20 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThemePacker));
             this.btnNext = new System.Windows.Forms.Button();
-            this.pbProgression = new System.Windows.Forms.ProgressBar();
             this.btnGenerate = new System.Windows.Forms.Button();
             this.btnLike = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.pbWallpaper = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chooseImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateFormInspirobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fromImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fromInspirobotmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fromThemepackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picturesLsv = new System.Windows.Forms.ListView();
             this.btnUnlike = new System.Windows.Forms.Button();
-            this.importThemepackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -54,13 +56,6 @@
             this.btnNext.TabIndex = 17;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
-            // 
-            // pbProgression
-            // 
-            this.pbProgression.Location = new System.Drawing.Point(69, 496);
-            this.pbProgression.Name = "pbProgression";
-            this.pbProgression.Size = new System.Drawing.Size(400, 28);
-            this.pbProgression.TabIndex = 16;
             // 
             // btnGenerate
             // 
@@ -115,26 +110,57 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chooseImageFolderToolStripMenuItem,
-            this.generateFormInspirobotToolStripMenuItem,
-            this.importThemepackToolStripMenuItem});
+            this.importToolStripMenuItem,
+            this.exportToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // chooseImageFolderToolStripMenuItem
+            // importToolStripMenuItem
             // 
-            this.chooseImageFolderToolStripMenuItem.Name = "chooseImageFolderToolStripMenuItem";
-            this.chooseImageFolderToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.chooseImageFolderToolStripMenuItem.Text = "Choose image folder";
-            this.chooseImageFolderToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFolderToolStripMenuItem_Click);
+            this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fromImageFolderToolStripMenuItem,
+            this.fromInspirobotmeToolStripMenuItem,
+            this.fromThemepackToolStripMenuItem});
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import...";
             // 
-            // generateFormInspirobotToolStripMenuItem
+            // fromImageFolderToolStripMenuItem
             // 
-            this.generateFormInspirobotToolStripMenuItem.Name = "generateFormInspirobotToolStripMenuItem";
-            this.generateFormInspirobotToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.generateFormInspirobotToolStripMenuItem.Text = "Generate from inspirobot.me";
-            this.generateFormInspirobotToolStripMenuItem.Click += new System.EventHandler(this.GenerateFormInspirobotToolStripMenuItem_Click);
+            this.fromImageFolderToolStripMenuItem.Name = "fromImageFolderToolStripMenuItem";
+            this.fromImageFolderToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fromImageFolderToolStripMenuItem.Text = "... from image folder";
+            this.fromImageFolderToolStripMenuItem.Click += new System.EventHandler(this.ChooseImageFolderToolStripMenuItem_Click);
+            // 
+            // fromInspirobotmeToolStripMenuItem
+            // 
+            this.fromInspirobotmeToolStripMenuItem.Name = "fromInspirobotmeToolStripMenuItem";
+            this.fromInspirobotmeToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fromInspirobotmeToolStripMenuItem.Text = "... from inspirobot.me";
+            this.fromInspirobotmeToolStripMenuItem.Click += new System.EventHandler(this.GenerateFormInspirobotToolStripMenuItem_Click);
+            // 
+            // fromThemepackToolStripMenuItem
+            // 
+            this.fromThemepackToolStripMenuItem.Name = "fromThemepackToolStripMenuItem";
+            this.fromThemepackToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fromThemepackToolStripMenuItem.Text = "... from Themepack";
+            this.fromThemepackToolStripMenuItem.Click += new System.EventHandler(this.ImportThemepackToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.asImageFolderToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export...";
+            // 
+            // asImageFolderToolStripMenuItem
+            // 
+            this.asImageFolderToolStripMenuItem.Name = "asImageFolderToolStripMenuItem";
+            this.asImageFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asImageFolderToolStripMenuItem.Text = "... as image folder";
+            this.asImageFolderToolStripMenuItem.Click += new System.EventHandler(this.AsImageFolderToolStripMenuItem_Click);
             // 
             // picturesLsv
             // 
@@ -155,13 +181,6 @@
             this.btnUnlike.UseVisualStyleBackColor = true;
             this.btnUnlike.Click += new System.EventHandler(this.BtnUnlike_Click);
             // 
-            // importThemepackToolStripMenuItem
-            // 
-            this.importThemepackToolStripMenuItem.Name = "importThemepackToolStripMenuItem";
-            this.importThemepackToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.importThemepackToolStripMenuItem.Text = "Import Themepack";
-            this.importThemepackToolStripMenuItem.Click += new System.EventHandler(this.ImportThemepackToolStripMenuItem_Click);
-            // 
             // ThemePacker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,7 +189,6 @@
             this.Controls.Add(this.btnUnlike);
             this.Controls.Add(this.picturesLsv);
             this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.pbProgression);
             this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.btnLike);
             this.Controls.Add(this.btnPrevious);
@@ -180,7 +198,7 @@
             this.Name = "ThemePacker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ThemePacker";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ThemePacker_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ThemePacker_FormClosing);
             this.Load += new System.EventHandler(this.ThemePacker_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbWallpaper)).EndInit();
             this.menuStrip1.ResumeLayout(false);
@@ -193,18 +211,20 @@
         #endregion
 
         private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.ProgressBar pbProgression;
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Button btnLike;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.PictureBox pbWallpaper;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem chooseImageFolderToolStripMenuItem;
         private System.Windows.Forms.ListView picturesLsv;
         private System.Windows.Forms.Button btnUnlike;
-        private System.Windows.Forms.ToolStripMenuItem generateFormInspirobotToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importThemepackToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fromImageFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fromInspirobotmeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fromThemepackToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asImageFolderToolStripMenuItem;
     }
 }
 

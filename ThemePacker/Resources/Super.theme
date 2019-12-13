@@ -65,9 +65,8 @@ SchemeName=@mmres.dll,-800
 [Theme.A]
 [Theme.W]
 DisplayName=Youpo
+
 [Slideshow]
 ImagesRootPath=DesktopBackground
-
 Interval=1000
 Shuffle=1
-ImagesRootPath=DesktopBackground
