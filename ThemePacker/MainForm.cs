@@ -27,7 +27,8 @@ namespace ThemePacker
         private Dictionary<string, bool> _shownImages;
         private string _path;
         private int _currentPic;
-
+        private bool _isFolderBased;
+        private OptionDialogBox _opb;
         private CustomProgressBar _pbProgression;
 
         private EventHandler _btnNextClick;
@@ -235,10 +236,11 @@ namespace ThemePacker
 
         private void BtnGenerate_Click(object sender, EventArgs e)
         {
-            OptionDialogBox opb = new OptionDialogBox();
-            opb.ShowDialog();
-            opb.Focus();
-            Generate();
+            _opb = new OptionDialogBox();
+            if (_opb.ShowDialog() == DialogResult.OK)
+            {
+                Generate();
+            }
         }
 
         public void Generate()
@@ -267,6 +269,13 @@ namespace ThemePacker
             theme["Control Panel_Desktop"]["WallpaperStyle"] = "2";
             theme["Slideshow"]["Interval"] = "60000";
 
+            //read and replace
+            string text = File.ReadAllText("temp\\super.theme");
+            text = text.Replace("DisplayName=Tinderspirobot", "DisplayName=" + fileName);
+            text = text.Replace("Interval=1000", "Interval=" + _opb.TimeChange);
+            text = text.Replace("TileWallpaper=1", "TileWallpaper="+ _opb.TileWallpaper);
+            text = text.Replace("WallpaperStyle=0", "WallpaperStyle=" + _opb.WallPaperStyle);
+            File.WriteAllText("temp\\super.theme", text);
             tfs.JSON = theme;
             tfs.JsonSerialize($"temp\\themepack\\{fileName}.theme");
 
