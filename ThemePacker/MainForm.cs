@@ -265,17 +265,9 @@ namespace ThemePacker
             tfs.Deserialize();
             JObject theme = tfs.JSON;
             theme["Theme"]["DisplayName"] = fileName;
-            theme["Control Panel_Desktop"]["TileWallpaper"] = "0";
-            theme["Control Panel_Desktop"]["WallpaperStyle"] = "2";
-            theme["Slideshow"]["Interval"] = "60000";
-
-            //read and replace
-            string text = File.ReadAllText("temp\\super.theme");
-            text = text.Replace("DisplayName=Tinderspirobot", "DisplayName=" + fileName);
-            text = text.Replace("Interval=1000", "Interval=" + _opb.TimeChange);
-            text = text.Replace("TileWallpaper=1", "TileWallpaper="+ _opb.TileWallpaper);
-            text = text.Replace("WallpaperStyle=0", "WallpaperStyle=" + _opb.WallPaperStyle);
-            File.WriteAllText("temp\\super.theme", text);
+            theme["Control Panel_Desktop"]["TileWallpaper"] = _opb.TileWallpaper;
+            theme["Control Panel_Desktop"]["WallpaperStyle"] = _opb.WallPaperStyle;
+            theme["Slideshow"]["Interval"] = _opb.TimeChange;
             tfs.JSON = theme;
             tfs.JsonSerialize($"temp\\themepack\\{fileName}.theme");
 
